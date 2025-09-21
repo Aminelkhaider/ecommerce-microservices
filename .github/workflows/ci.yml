@@ -1,0 +1,32 @@
+name: Java CI (Build & Test)
+
+# When should the pipeline run?
+on:
+  push:
+    branches: [ sprint0, main ]   # run when you push to sprint0 or main
+  pull_request:
+    branches: [ main ]            # run when you make a PR into main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # GitHub provides an Ubuntu VM for the job
+
+    steps:
+    # 1) Checkout code
+    - name: Checkout source code
+      uses: actions/checkout@v3
+
+    # 2) Set up Java 22
+    - name: Set up JDK 22
+      uses: actions/setup-java@v3
+      with:
+        java-version: '22'
+        distribution: 'temurin'
+
+    # 3) Build project with Maven (skip tests here for speed)
+    - name: Build with Maven
+      run: mvn clean install -DskipTests
+
+    # 4) Run all tests
+    - name: Run tests
+      run: mvn test
